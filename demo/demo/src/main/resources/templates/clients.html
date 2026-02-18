@@ -1,0 +1,95 @@
+<style xmlns:th="http://www.w3.org/1999/xhtml">
+    .comparison-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    .column {
+        flex: 1;
+        min-width: 400px;
+    }
+
+    .column-header {
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        color: white;
+        font-family: sans-serif;
+    }
+
+    .original-header { background-color: #6c757d; } /* Серый для оригинала */
+    .processed-header { background-color: #28a745; } /* Зеленый для SpEL */
+
+    .client-card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-left: 5px solid;
+    }
+
+    .original-card { border-left-color: #007bff; }
+    .processed-card { border-left-color: #28a745; }
+
+    .field-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+        border-bottom: 1px dashed #eee;
+    }
+
+    .field-label {
+        font-weight: bold;
+        color: #555;
+        font-size: 0.9em;
+    }
+
+    .field-value {
+        color: #000;
+        font-family: 'Courier New', monospace;
+    }
+
+    .processed-card .field-value {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+</style>
+
+<div class="comparison-wrapper">
+    <div class="column">
+        <div class="column-header original-header">
+            <h3>Оригинал (БД)</h3>
+        </div>
+
+        <div th:each="c : ${clientsBefore}" class="client-card original-card">
+            <div class="field-row"><span class="field-label">ID:</span> <span class="field-value">[[${c.id}]]</span></div>
+            <div class="field-row"><span class="field-label">First Name:</span> <span class="field-value">[[${c.firstName}]]</span></div>
+            <div class="field-row"><span class="field-label">Last Name:</span> <span class="field-value">[[${c.lastName}]]</span></div>
+            <div class="field-row"><span class="field-label">Middle Name:</span> <span class="field-value">[[${c.middleName}]]</span></div>
+            <div class="field-row"><span class="field-label">Age:</span> <span class="field-value">[[${c.age}]]</span></div>
+            <div class="field-row"><span class="field-label">City:</span> <span class="field-value">[[${c.address.city}]]</span></div>
+            <div class="field-row"><span class="field-label">Street:</span> <span class="field-value">[[${c.address.street}]]</span></div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="column-header processed-header">
+            <h3>Обработка SpEL</h3>
+        </div>
+
+        <div th:each="c : ${clientsAfter}" class="client-card processed-card">
+            <div class="field-row"><span class="field-label">ID:</span> <span class="field-value">[[${c.id}]]</span></div>
+            <div class="field-row"><span class="field-label">First Name:</span> <span class="field-value">[[${c.firstName}]]</span></div>
+            <div class="field-row"><span class="field-label">Last Name:</span> <span class="field-value">[[${c.lastName}]]</span></div>
+            <div class="field-row"><span class="field-label">Middle Name:</span> <span class="field-value">[[${c.middleName}]]</span></div>
+            <div class="field-row"><span class="field-label">Age:</span> <span class="field-value">[[${c.age}]]</span></div>
+            <div class="field-row"><span class="field-label">City:</span> <span class="field-value">[[${c.address.city}]]</span></div>
+            <div class="field-row"><span class="field-label">Street:</span> <span class="field-value">[[${c.address.street}]]</span></div>
+        </div>
+    </div>
+</div>
