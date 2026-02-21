@@ -1,0 +1,27 @@
+[
+  {
+    "fromField": "Client1.FirstName",
+    "toField": "Имя",
+    "exp": "#root['Client1.FirstName'].substring(0,1).toUpperCase() + #root['Client1.FirstName'].substring(1).toLowerCase()"
+  },
+  {
+    "fromField": "Client1.FirstName",
+    "toField": "Полное имя",
+    "exp": "T(org.springframework.util.StringUtils).capitalize(#root['Client1.LastName']) + ' ' + T(org.springframework.util.StringUtils).capitalize(#root['Client1.FirstName']) + ' ' + T(org.springframework.util.StringUtils).capitalize(#root['Client1.MiddleName'])"
+  },
+  {
+    "fromField": "Client1.Address.City",
+    "toField": "Адрес",
+    "exp": "'Город: '+ #root['Client1.Address.City'].toUpperCase()+ ' Улица: ' + #root['Client1.Address.Street'].toUpperCase()"
+  },
+  {
+    "fromField": "Client1.Address.Street",
+    "toField": "Дата рождения",
+    "exp": "new java.text.SimpleDateFormat('MM/dd/yyyy').format(new java.text.SimpleDateFormat('yyyy-MM-dd').parse(#root['Client1.DateOfBirth']))"
+  },
+  {
+    "fromField": "Client1.Age",
+    "toField": "Adult?",
+    "exp": "T(java.lang.Integer).parseInt(#root['Client1.Age']) >= 18 ? 'Yes' : 'No'"
+  }
+]

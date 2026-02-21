@@ -7,13 +7,17 @@ import com.example.demo.repository.TestEntityRep;
 import com.example.demo.service.MyEntryResolver;
 import com.example.demo.service.SimpleConverter;
 import com.example.demo.service.SimpleUserService;
+import com.example.demo.service.spel.SpelResolver;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 public class InitTestData {
@@ -46,34 +50,15 @@ public class InitTestData {
 
             System.out.println("init was ended successfully");
 
-//            Field[] fields = SimpleUser.class.getDeclaredFields();
-//
-//            converter.marshal(userService.getUsers(), fields);
-//            System.out.println("test parse String");
-//            String testData = """
-//com.example.demo.entity.SimpleUser.id=1
-//com.example.demo.entity.SimpleUser.userName=user1
-//com.example.demo.entity.SimpleUser.password=$2a$10$AWuY3I0hyXhvtYVYIkXuUu.qHq6Aiw0TzAWtaYGSImbsdgo2OAcRS
-//com.example.demo.entity.SimpleUser.id=2
-//com.example.demo.entity.SimpleUser.userName=user2
-//com.example.demo.entity.SimpleUser.password=$2a$10$yHFccDAIBidBANleXc4Gl..Zv2TNw3nqyBfioDyuTfcC1ijdQDew6
-//com.example.demo.entity.SimpleUser.id=3
-//com.example.demo.entity.SimpleUser.userName=user3
-//com.example.demo.entity.SimpleUser.password=$2a$10$i0GEbH0DY5KmOyp3nIU19eyWg0u896xCkVGN6L9zQaBdQhrlgG1ZO
-//com.example.demo.entity.SimpleUser.id=4
-//com.example.demo.entity.SimpleUser.userName=user4
-//com.example.demo.entity.SimpleUser.password=$2a$10$Sx0O9MOwCcUMzY7DQXA/4ucq5hPCTXrqlSMS9YGLdQ2orlDCDo3cu
-//com.example.demo.entity.SimpleUser.id=5
-//com.example.demo.entity.SimpleUser.userName=user5
-//com.example.demo.entity.SimpleUser.password=$2a$10$VENjHj1qX/Zt0HpuWx4kWuzknV6xEgJDjWoCPjgPt5PoGDPuDEm1a
-//                    """;
-//           List<MyEntry> entries = resolver.parseEntries(testData);
-//           for (MyEntry e :entries){
-//               System.out.println(e);
-//           }
-//            System.out.println("try to UpCase:");
-//
-//            System.out.println(converter.convertValToUpCase(testData));
+            SpelResolver resolver = new SpelResolver(new File("demo/rules.json"));
+            Map<String, String> values = new HashMap<>();
+            values.put("productName", "Ноутбук");
+            values.put("price", "1000");
+            values.put("discount", "0.15"); // 15%
+            values.put("category", "electronics");
+            values.put("userStatus", "VIP");
+            Map<String,String> res = resolver.resolve(values);
+            System.out.println(res);
 
 
         };

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SpEL Rule Engine</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; }
+        .container { display: flex; gap: 20px; padding: 20px; }
+        .column { flex: 1; display: flex; flex-direction: column; }
+        textarea {
+            width: 100%;
+            height: 450px;
+            font-family: 'Consolas', monospace;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .button-row { text-align: center; margin-top: 20px; }
+        button {
+            padding: 12px 50px;
+            cursor: pointer;
+            background: #28a745;
+            color: white;
+            border: none;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        button:hover { background: #218838; }
+        label { font-weight: bold; margin-bottom: 8px; font-size: 1.1em; }
+        .error { color: #dc3545; font-size: 0.9em; margin-top: 5px; display: none; }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center;">SpEL Трансформатор данных</h2>
+
+<div class="container">
+    <div class="column">
+        <label for="inputJson">Входной JSON (Данные):</label>
+        <textarea id="inputJson" placeholder='{&#10;  "price": "100",&#10;  "status": "admin"&#10;}'></textarea>
+        <div id="jsonError" class="error">Некорректный формат JSON</div>
+    </div>
+
+    <div class="column">
+        <label for="outputJson">Результат (Мапа из контроллера):</label>
+        <textarea id="outputJson" readonly placeholder="Результат появится здесь..."></textarea>
+    </div>
+</div>
+
+<div class="button-row">
+    <button type="button" onclick="sendToEvaluate()">Выполнить SpEL правила</button>
+</div>
+
+<script>
+    async function sendToEvaluate() {
+        const inputArea = document.getElementById('inputJson');
+        const outputArea = document.getElementById('outputJson');
+        const errorLabel = document.getElementById('jsonError');
+
+        errorLabel.style.display = 'none';
+
+        let payload;
+        try {
+            // Проверяем, что в поле валидный JSON
+            payload = JSON.parse(inputArea.value);
+        } catch (e) {
+            errorLabel.style.display = 'block';
+            return;
+        }
+
+        try {
+            // Отправляем POST запрос на твой эндпоинт
+            const response = await fetch('/evaluate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const resultMap = await response.json();
+                // Выводим результат в правое окно с отступами (Pretty Print)
+                outputArea.value = JSON.stringify(resultMap, null, 2);
+            } else {
+                outputArea.value = "Ошибка сервера: " + response.status;
+            }
+        } catch (error) {
+            outputArea.value = "Ошибка при отправке: " + error.message;
+        }
+    }
+</script>
+
+</body>
+</html>
