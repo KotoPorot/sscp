@@ -1,0 +1,8 @@
+{
+  "firstName": "'Андрей'",
+  "lastName": "lastName.trim()",
+  "middleName": "firstName + ' ' + lastName",
+  "age": "age + 1",
+  "address.city": "address.city == 'Moscow' ? 'Capital' : address.city",
+  "address.street": "address.street.substring(0, 1).toUpperCase() + address.street.substring(1)"
+}
