@@ -1,23 +1,13 @@
 package com.example.demo.config.security;
 
-import com.example.demo.entity.MyEntry;
 import com.example.demo.entity.SimpleTestEntity;
-import com.example.demo.entity.SimpleUser;
 import com.example.demo.repository.TestEntityRep;
-import com.example.demo.service.MyEntryResolver;
-import com.example.demo.service.SimpleConverter;
 import com.example.demo.service.SimpleUserService;
-import com.example.demo.service.spel.SpelResolver;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 public class InitTestData {
@@ -26,7 +16,7 @@ public class InitTestData {
 
     public InitTestData(SimpleUserService userService, TestEntityRep testEntityRep) {
         this.userService = userService;
-        this.testEntityRep=testEntityRep;
+        this.testEntityRep = testEntityRep;
 
     }
 
@@ -43,24 +33,12 @@ public class InitTestData {
                     System.out.println("Password: " + pass);
                 }
             }
-            for (int i = 0; i<5; i++){
-                String name = "name"+(i+1);
-                testEntityRep.save(new SimpleTestEntity(name, i+18,List.of("drinks", "songs", "dogs") ));
+            for (int i = 0; i < 5; i++) {
+                String name = "name" + (i + 1);
+                testEntityRep.save(new SimpleTestEntity(name, i + 18, List.of("drinks", "songs", "dogs")));
             }
 
             System.out.println("init was ended successfully");
-
-            SpelResolver resolver = new SpelResolver(new File("demo/rules.json"));
-            Map<String, String> values = new HashMap<>();
-            values.put("productName", "Ноутбук");
-            values.put("price", "1000");
-            values.put("discount", "0.15"); // 15%
-            values.put("category", "electronics");
-            values.put("userStatus", "VIP");
-            Map<String,String> res = resolver.resolve(values);
-            System.out.println(res);
-
-
         };
     }
 

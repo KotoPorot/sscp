@@ -1,51 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>SpEL Rule Engine</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; }
-        .container { display: flex; gap: 20px; padding: 20px; }
+        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+        h2 { text-align: center; color: #2c3e50; }
+        .container { display: flex; gap: 20px; max-width: 1200px; margin: 0 auto; }
         .column { flex: 1; display: flex; flex-direction: column; }
+
         textarea {
             width: 100%;
-            height: 450px;
-            font-family: 'Consolas', monospace;
+            height: 500px;
+            font-family: 'Consolas', 'Monaco', monospace;
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 14px;
+            resize: vertical;
         }
-        .button-row { text-align: center; margin-top: 20px; }
+
+        .button-row { text-align: center; margin-top: 25px; }
+
         button {
-            padding: 12px 50px;
+            padding: 15px 60px;
             cursor: pointer;
             background: #28a745;
             color: white;
             border: none;
             font-size: 18px;
+            font-weight: bold;
             border-radius: 5px;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.1s;
         }
+
         button:hover { background: #218838; }
-        label { font-weight: bold; margin-bottom: 8px; font-size: 1.1em; }
-        .error { color: #dc3545; font-size: 0.9em; margin-top: 5px; display: none; }
+        button:active { transform: scale(0.98); }
+
+        label { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; color: #444; }
+        .error { color: #dc3545; font-size: 0.9em; margin-top: 8px; display: none; font-weight: bold; }
+
+        #outputJson { background-color: #f8f9fa; color: #2c3e50; }
     </style>
 </head>
 <body>
 
-<h2 style="text-align: center;">SpEL Трансформатор данных</h2>
+<h2>SpEL Трансформатор данных</h2>
 
 <div class="container">
     <div class="column">
-        <label for="inputJson">Входной JSON (Данные):</label>
-        <textarea id="inputJson" placeholder='{&#10;  "price": "100",&#10;  "status": "admin"&#10;}'></textarea>
-        <div id="jsonError" class="error">Некорректный формат JSON</div>
+        <label for="inputJson">Входной JSON (Данные из модели):</label>
+        <textarea id="inputJson"
+                  th:text="${inputData}"
+                  placeholder='[{"id": 1, "name": "test"}]'></textarea>
+        <div id="jsonError" class="error">Ошибка: Некорректный формат JSON</div>
     </div>
 
     <div class="column">
-        <label for="outputJson">Результат (Мапа из контроллера):</label>
-        <textarea id="outputJson" readonly placeholder="Результат появится здесь..."></textarea>
+        <label for="outputJson">Результат обработки (SpEL):</label>
+        <textarea id="outputJson" readonly placeholder="Здесь появится результат после нажатия кнопки..."></textarea>
     </div>
 </div>
 
@@ -59,19 +74,27 @@
         const outputArea = document.getElementById('outputJson');
         const errorLabel = document.getElementById('jsonError');
 
+        // Сбрасываем состояние
         errorLabel.style.display = 'none';
+        outputArea.value = "Обработка...";
 
         let payload;
         try {
-            // Проверяем, что в поле валидный JSON
-            payload = JSON.parse(inputArea.value);
+            // Проверяем валидность JSON перед отправкой
+            const rawValue = inputArea.value.trim();
+            if (!rawValue) {
+                outputArea.value = "Поле ввода пусто";
+                return;
+            }
+            payload = JSON.parse(rawValue);
         } catch (e) {
             errorLabel.style.display = 'block';
+            outputArea.value = "Ошибка валидации JSON";
             return;
         }
 
         try {
-            // Отправляем POST запрос на твой эндпоинт
+            // Отправляем POST запрос на ваш эндпоинт
             const response = await fetch('/evaluate', {
                 method: 'POST',
                 headers: {
@@ -82,13 +105,14 @@
 
             if (response.ok) {
                 const resultMap = await response.json();
-                // Выводим результат в правое окно с отступами (Pretty Print)
+                // Выводим результат с красивыми отступами
                 outputArea.value = JSON.stringify(resultMap, null, 2);
             } else {
-                outputArea.value = "Ошибка сервера: " + response.status;
+                const errorText = await response.text();
+                outputArea.value = "Ошибка сервера (" + response.status + "): " + errorText;
             }
         } catch (error) {
-            outputArea.value = "Ошибка при отправке: " + error.message;
+            outputArea.value = "Ошибка сети или CORS: " + error.message;
         }
     }
 </script>
