@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.SimpleTestEntity;
+import com.example.demo.entity.SimpleUser;
 import com.example.demo.repository.TestEntityRep;
 import com.example.demo.service.SimpleConverter;
 import com.example.demo.service.SimpleUserService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,6 +59,13 @@ public class ConverterPage {
 
     @GetMapping("/resolver")
     public String resolver(Model model) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        //исправить на Клиентов, когда добавлю
+        List<SimpleUser> users = userService.getUsers();
+
+        String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
+        model.addAttribute("inputData", res);
         return "spel-page.html";
     }
 

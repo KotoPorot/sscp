@@ -57,9 +57,9 @@ public class MyEntryResolver<T> {
         return builder.toString();
     }
 
-    public List<MyEntry> valuesToUpCase(List<MyEntry> entries){
-        List<MyEntry> result= entries;
-        for (MyEntry entry:result){
+    public List<MyEntry> valuesToUpCase(List<MyEntry> entries) {
+        List<MyEntry> result = entries;
+        for (MyEntry entry : result) {
             entry.setValue(entry.getValue().toUpperCase());
         }
         return result;
