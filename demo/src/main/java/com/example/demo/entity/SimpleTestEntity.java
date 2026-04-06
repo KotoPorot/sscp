@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 @Entity
-@Table(name = "testEntity")
+@Table(name = "test_entity", schema = "my_app_schema")
 public class SimpleTestEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,6 +12,10 @@ public class SimpleTestEntity {
 
     private String name;
     private int age;
+
+    @ElementCollection
+    @CollectionTable(name = "test_entity_hobby", schema = "my_app_schema", joinColumns = @JoinColumn(name = "test_entity_id"))
+    @Column(name = "hobby")
     List<String> hobby;
 
     public SimpleTestEntity() {

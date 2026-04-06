@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>SpEL Rule Engine</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <style>
         body { font-family: sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
         h2 { text-align: center; color: #2c3e50; }
@@ -74,13 +77,16 @@
         const outputArea = document.getElementById('outputJson');
         const errorLabel = document.getElementById('jsonError');
 
+        // Получаем CSRF токен из мета-тегов
+        const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+        const csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+
         // Сбрасываем состояние
         errorLabel.style.display = 'none';
         outputArea.value = "Обработка...";
 
         let payload;
         try {
-            // Проверяем валидность JSON перед отправкой
             const rawValue = inputArea.value.trim();
             if (!rawValue) {
                 outputArea.value = "Поле ввода пусто";
@@ -94,18 +100,18 @@
         }
 
         try {
-            // Отправляем POST запрос на ваш эндпоинт
             const response = await fetch('/evaluate', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    // Добавляем заголовок безопасности
+                    [csrfHeader]: csrfToken
                 },
                 body: JSON.stringify(payload)
             });
 
             if (response.ok) {
                 const resultMap = await response.json();
-                // Выводим результат с красивыми отступами
                 outputArea.value = JSON.stringify(resultMap, null, 2);
             } else {
                 const errorText = await response.text();

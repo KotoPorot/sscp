@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.MyClient;
 import com.example.demo.entity.SimpleTestEntity;
 import com.example.demo.entity.SimpleUser;
 import com.example.demo.repository.TestEntityRep;
+import com.example.demo.service.MyClientService;
 import com.example.demo.service.SimpleConverter;
 import com.example.demo.service.SimpleUserService;
 import com.example.demo.service.spel.SpelResolver;
@@ -25,6 +27,8 @@ public class ConverterPage {
     private SimpleConverter<SimpleTestEntity> converter;
     @Autowired
     private TestEntityRep entityRep;
+    @Autowired
+    private MyClientService myClientService;
 
     @GetMapping("/")
     public String showPage(Model model) throws IllegalAccessException {
@@ -61,12 +65,12 @@ public class ConverterPage {
     public String resolver(Model model) {
         ObjectMapper mapper = new ObjectMapper();
 
-        //исправить на Клиентов, когда добавлю
-        List<SimpleUser> users = userService.getUsers();
+        List<MyClient> clients = myClientService.getAllClients();
 
-        String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
+        String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(clients);
         model.addAttribute("inputData", res);
         return "spel-page.html";
     }
+
 
 }
