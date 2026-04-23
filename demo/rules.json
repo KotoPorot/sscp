@@ -1,27 +1,37 @@
 [
   {
-    "fromField": "userName",
-    "toField": "Логин (ВЕРХНИЙ РЕГИСТР)",
-    "exp": "#root['userName'].toUpperCase()"
+    "fromField": "firstName",
+    "toField": "Полное имя",
+    "exp": "#root['firstName'] + ' ' + #root['lastName']"
   },
   {
-    "fromField": "userName",
-    "toField": "Длина имени",
-    "exp": "'Символов: ' + #root['userName'].length()"
+    "fromField": "address",
+    "toField": "Локация",
+    "exp": "#root['address']['city'] + (#root['address']['street'] != null ? ', ' + #root['address']['street'] : ' (Адрес не указан)')"
   },
   {
-    "fromField": "password",
-    "toField": "Тип хэша",
-    "exp": "#root['password'].startsWith('$2a$') ? 'BCrypt' : 'Unknown'"
+    "fromField": "age",
+    "toField": "Категория",
+    "exp": "#root['age'] >= 30 ? 'Senior' : 'Junior'"
   },
   {
-    "fromField": "userName",
-    "toField": "Приветствие",
-    "exp": "'Здравствуйте, ' + #root['userName'].substring(0, 1).toUpperCase() + #root['userName'].substring(1)"
+    "fromField": "date",
+    "toField": "Год регистрации",
+    "exp": "#root['date'].substring(0, 4)"
   },
   {
-    "fromField": "password",
-    "toField": "Безопасность",
-    "exp": "#root['password'].length() > 20 ? 'Strong' : 'Weak'"
+    "fromField": "middleName",
+    "toField": "Наличие отчества",
+    "exp": "#root['middleName'] == null ? 'Отсутствует' : 'Указано'"
+  },
+  {
+    "fromField": "lastName",
+    "toField": "Инициалы",
+    "exp": "#root['firstName'].substring(0, 1) + '.' + #root['lastName'].substring(0, 1) + '.'"
+  },
+  {
+    "fromField": "id",
+    "toField": "Системный код",
+    "exp": "'ID-' + #root['id'] + '-' + #root['address']['city'].toUpperCase().substring(0, 3)"
   }
 ]

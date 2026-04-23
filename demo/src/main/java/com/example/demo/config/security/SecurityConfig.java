@@ -17,7 +17,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(request -> request.anyRequest().authenticated()).formLogin(f -> f.permitAll()).build();
+        return http.headers(h->h.frameOptions(o->o.sameOrigin()))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+                .authorizeHttpRequests(request -> request.anyRequest().authenticated())
+                .formLogin(f -> f.permitAll()).build();
 
 
     }

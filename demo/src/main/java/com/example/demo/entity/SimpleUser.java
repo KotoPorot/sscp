@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "my_app_schema")
 public class SimpleUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
