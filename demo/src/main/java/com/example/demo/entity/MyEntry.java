@@ -1,10 +1,14 @@
 package com.example.demo.entity;
 
+
+import lombok.NonNull;
+
 public class MyEntry {
+    @NonNull
     private String key;
     private String value;
 
-    public MyEntry(String key, String value) {
+    public MyEntry(@NonNull String key, String value) {
         this.key = key;
         this.value = value;
     }
