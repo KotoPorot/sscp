@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
@@ -65,8 +67,7 @@ class MyEntryResolverTests {
             }
             Field[] wrongFields = WrongPojo.class.getDeclaredFields();
 
-            assertThrows(IllegalArgumentException.class,
-                    () -> resolver.collectObEntries(testOb, wrongFields));
+            assertThrows(IllegalArgumentException.class, () -> resolver.collectObEntries(testOb, wrongFields));
         }
     }
 
@@ -112,18 +113,11 @@ class MyEntryResolverTests {
 
         }
 
-
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"=simpleKey1_simlpeValue1", "simpleKey2simlpeValue1", "simpleKey2\nsimlpeValue1"})
         @DisplayName("Should thrown IllegalArgumentException when string dosnt match a pattern")
-        void shouldThrownIllegalArgumentException(){
-            String s1 = "=simpleKey1_simlpeValue1";
-            String s2 = "simpleKey2simlpeValue1";
-            String s3 = "simpleKey2\n " +
-                    "simlpeValue1";
-
-            assertThrows(IllegalArgumentException.class,() -> resolver.parseEntry(s1));
-            assertThrows(IllegalArgumentException.class,() -> resolver.parseEntry(s2));
-            assertThrows(IllegalArgumentException.class,() -> resolver.parseEntry(s3));
+        void shouldThrownIllegalArgumentException(String s) {
+            assertThrows(IllegalArgumentException.class, () -> resolver.parseEntry(s));
         }
 
     }
@@ -137,9 +131,7 @@ class MyEntryResolverTests {
         @DisplayName("Should ParseString Successfully")
         void shouldParseStringSuccessfully() {
             //To avoid CRLF
-            String expected = "simpleKey1=simlpeValue1" +
-                    System.lineSeparator() + "simpleKey2=" + System.lineSeparator() +
-                    "simpleKey3=null" + System.lineSeparator();
+            String expected = "simpleKey1=simlpeValue1" + System.lineSeparator() + "simpleKey2=" + System.lineSeparator() + "simpleKey3=null" + System.lineSeparator();
 
             List<MyEntry> testEntries = new ArrayList<>();
             testEntries.add(new MyEntry("simpleKey1", "simlpeValue1"));
@@ -154,11 +146,11 @@ class MyEntryResolverTests {
 
     @Nested
     @DisplayName("ValuesToUpperCase Tests")
-    class ValuesToUpperCaseTests{
+    class ValuesToUpperCaseTests {
 
         @Test
         @DisplayName("Should ValuesToUpperCase Successfully when valid input data")
-        void shouldValuesToUpperCaseSuccessfullyWhenValidInputData(){
+        void shouldValuesToUpperCaseSuccessfullyWhenValidInputData() {
             List<MyEntry> testEntries = new ArrayList<>();
             testEntries.add(new MyEntry("simpleKey1", "simlpeValue1"));
 
@@ -172,7 +164,7 @@ class MyEntryResolverTests {
 
         @Test
         @DisplayName("Should ValuesToUpperCase Successfully when value empty")
-        void shouldValuesToUpperCaseSuccessfullyWhenValueEmpty(){
+        void shouldValuesToUpperCaseSuccessfullyWhenValueEmpty() {
             List<MyEntry> testEntries = new ArrayList<>();
             testEntries.add(new MyEntry("simpleKey1", ""));
 
@@ -186,7 +178,7 @@ class MyEntryResolverTests {
 
         @Test
         @DisplayName("Should ValuesToUpperCase Successfully when value null")
-        void shouldValuesToUpperCaseSuccessfullyWhenValueNull(){
+        void shouldValuesToUpperCaseSuccessfullyWhenValueNull() {
             List<MyEntry> testEntries = new ArrayList<>();
             testEntries.add(new MyEntry("simpleKey1", null));
 
@@ -201,9 +193,9 @@ class MyEntryResolverTests {
         //I am not sure that this test have any sense
         @Test
         @DisplayName("Should Thrown NullPointerException when input null ")
-        void shouldThrownNullPointerExceptionWhenInputNull(){
+        void shouldThrownNullPointerExceptionWhenInputNull() {
 
-            assertThrows(NullPointerException.class, ()-> resolver.valuesToUpCase(null));
+            assertThrows(NullPointerException.class, () -> resolver.valuesToUpCase(null));
 
 
         }
