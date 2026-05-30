@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.annotation.LogExecutionTime;
 import com.example.demo.entity.MyEntry;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class MyEntryResolver<T> {
     private static final String PATTERN = "^([^=]+)=(.*)$";
 
 
+    @LogExecutionTime
     public List<MyEntry> collectObEntries(T ob, Field[] fields) throws IllegalAccessException {
         List<MyEntry> entries = new ArrayList<>();
         String packetPath = ob.getClass().getName();
@@ -26,6 +28,7 @@ public class MyEntryResolver<T> {
     }
 
     //There is no need for a test as the method is simple
+    @LogExecutionTime
     public List<MyEntry> collectObEntries(List<T> objects, Field[] fields) throws IllegalAccessException {
         List<MyEntry> result = new ArrayList<>();
         for (T ob : objects) {
@@ -35,6 +38,7 @@ public class MyEntryResolver<T> {
     }
 
     //парсит строку в ентри
+    @LogExecutionTime
     public MyEntry parseEntry(String s) {
         Pattern pattern = Pattern.compile(PATTERN);
         Matcher matcher = pattern.matcher(s);
@@ -50,10 +54,12 @@ public class MyEntryResolver<T> {
     }
 
     //There is no need for a test as the method is simple
+    @LogExecutionTime
     public List<MyEntry> parseEntries(String s) {
         return s.lines().filter(line -> !line.isBlank()).map(this::parseEntry).toList();
     }
 
+    @LogExecutionTime
     public String parseString(List<MyEntry> list) {
         StringBuilder builder = new StringBuilder();
 
@@ -63,6 +69,7 @@ public class MyEntryResolver<T> {
         return builder.toString();
     }
 
+    @LogExecutionTime
     public List<MyEntry> valuesToUpCase(List<MyEntry> entries) {
         List<MyEntry> result = new ArrayList<>();
 
