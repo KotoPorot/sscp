@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.MyClient;
 import com.example.demo.entity.SimpleTestEntity;
-import com.example.demo.entity.SimpleUser;
 import com.example.demo.repository.TestEntityRep;
 import com.example.demo.service.MyClientService;
 import com.example.demo.service.SimpleConverter;
